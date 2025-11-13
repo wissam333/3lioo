@@ -1,0 +1,39 @@
+backend:
+  name: git-gateway
+  branch: main
+
+# For local development without authentication
+local_backend: true
+
+media_folder: "public/images/uploads"
+public_folder: "/images/uploads"
+
+collections:
+  - name: "blog"
+    label: "Blog Posts"
+    folder: "content/blog"
+    create: true
+    slug: "{{fields.slug}}"
+    fields:
+      - { label: "Title", name: "title", widget: "string", required: true }
+      - { label: "Slug", name: "slug", widget: "string", required: true }
+      - {
+          label: "Publish Date",
+          name: "date",
+          widget: "datetime",
+          required: true,
+        }
+      - {
+          label: "Description",
+          name: "description",
+          widget: "text",
+          required: true,
+        }
+      - {
+          label: "Category",
+          name: "category",
+          widget: "select",
+          options: ["Security", "Tutorial", "Research"],
+          default: "Security",
+        }
+      - { label: "Body", name: "body", widget: "markdown", required: true }

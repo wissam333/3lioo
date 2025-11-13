@@ -1,0 +1,93 @@
+backend:
+  name: git-gateway
+  branch: main
+
+publish_mode: editorial_workflow
+
+media_folder: "public/images/uploads"
+public_folder: "/images/uploads"
+
+collections:
+  # Blog posts collection (existing)
+  - name: "blog"
+    label: "Blog Posts"
+    folder: "content/blog"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: "Title", name: "title", widget: "string", required: true }
+      - {
+          label: "Publish Date",
+          name: "date",
+          widget: "datetime",
+          required: true,
+        }
+      - { label: "Description", name: "description", widget: "text" }
+      - {
+          label: "Featured Image",
+          name: "image",
+          widget: "image",
+          required: false,
+        }
+      - { label: "Body", name: "body", widget: "markdown", required: true }
+
+  # NEW: Gallery Collection
+  - name: "gallery"
+    label: "Gallery"
+    folder: "content/gallery"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: "Title", name: "title", widget: "string", required: true }
+      - {
+          label: "Description",
+          name: "description",
+          widget: "text",
+          required: false,
+        }
+      - { label: "Date", name: "date", widget: "datetime", required: true }
+      - {
+          label: "Category",
+          name: "category",
+          widget: "select",
+          options: ["Nature", "Travel", "Portrait", "Urban", "Art"],
+          required: true,
+        }
+      - label: "Gallery Images"
+        name: "images"
+        widget: "list"
+        fields:
+          - { label: "Image", name: "image", widget: "image", required: true }
+          - {
+              label: "Caption",
+              name: "caption",
+              widget: "string",
+              required: false,
+            }
+          - { label: "Alt Text", name: "alt", widget: "string", required: true }
+
+  # NEW: Gallery Categories (optional)
+  - name: "gallery-categories"
+    label: "Gallery Categories"
+    folder: "content/gallery-categories"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - {
+          label: "Category Name",
+          name: "title",
+          widget: "string",
+          required: true,
+        }
+      - {
+          label: "Description",
+          name: "description",
+          widget: "text",
+          required: false,
+        }
+      - {
+          label: "Featured Image",
+          name: "image",
+          widget: "image",
+          required: false,
+        }
