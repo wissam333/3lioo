@@ -1,4 +1,18 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+import fs from "fs";
+import path from "path";
+// helper function to generate routes dynamically
+function getBlogRoutes() {
+  const postsDir = path.resolve("./content/posts");
+  if (!fs.existsSync(postsDir)) return ["/blog"];
+
+  const files = fs.readdirSync(postsDir);
+  const routes = files
+    .filter((f) => f.endsWith(".md"))
+    .map((f) => "/blog/" + f.replace(".md", ""));
+
+  return ["/blog", ...routes];
+}
 import nora from "@primevue/themes/nora";
 export default defineNuxtConfig({
   compatibilityDate: "2024-11-01",
@@ -14,9 +28,11 @@ export default defineNuxtConfig({
     "@nuxtjs/fontaine",
     "@nuxt/content",
   ],
+  target: "static", // for Nuxt 3 SSG
   nitro: {
     prerender: {
-      routes: ["/"],
+      crawlLinks: true, // automatically pre-render discovered links
+      routes: getBlogRoutes(), // your dynamic blog routes
     },
   },
   content: {
