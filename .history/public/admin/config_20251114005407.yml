@@ -1,6 +1,6 @@
 backend:
   name: git-gateway
-  branch: master # or main, whatever your default branch is
+  branch: master  # or main, whatever your default branch is
   site_id: 3lioo.netlify.app
 
 media_folder: "public/uploads"
