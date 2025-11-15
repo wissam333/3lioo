@@ -100,7 +100,7 @@ export default defineNuxtConfig({
   },
   app: {
     head: {
-      title: "3lioo Blog",
+      title: "Ugarit Center",
       htmlAttrs: {
         lang: "en",
       },
@@ -117,7 +117,7 @@ export default defineNuxtConfig({
         },
         {
           rel: "preconnect",
-          href: "https://3lioo.netlify.app",
+          href: "https://3lioo.netlify.app/",
           crossorigin: "",
         },
       ],

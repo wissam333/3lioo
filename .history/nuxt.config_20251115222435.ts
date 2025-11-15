@@ -100,7 +100,7 @@ export default defineNuxtConfig({
   },
   app: {
     head: {
-      title: "3lioo Blog",
+      title: "Ugarit Center",
       htmlAttrs: {
         lang: "en",
       },
