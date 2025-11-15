@@ -5,16 +5,16 @@
 [functions]
   directory = ".netlify/functions"
 
-# API requests → server functions
+# API routes
 [[redirects]]
   from = "/api/*"
-  to = "/.netlify/functions/api/:splat"
+  to = "/.netlify/functions/server/:splat"
   status = 200
   force = true
 
-# All SPA pages fallback → index.html
+# All SSR pages
 [[redirects]]
   from = "/*"
-  to = "/index.html"
+  to = "/.netlify/functions/server"
   status = 200
   force = true

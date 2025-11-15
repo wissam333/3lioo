@@ -16,7 +16,7 @@ export default defineNuxtConfig({
   ],
   ssr: false, // SPA mode
   nitro: {
-    preset: "netlify",
+    preset: "netlify", // still needed for server API
   },
   content: {
     highlight: { theme: "github-dark" },
