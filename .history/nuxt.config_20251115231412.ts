@@ -14,11 +14,6 @@ export default defineNuxtConfig({
     "@nuxtjs/fontaine",
     "@nuxt/content",
   ],
-  ssr: true,
-  nitro: {
-    preset: "netlify",
-    devProxy: true,
-  },
   content: {
     highlight: { theme: "github-dark" },
     navigation: true,

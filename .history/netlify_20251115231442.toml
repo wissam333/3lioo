@@ -1,0 +1,20 @@
+[build]
+  command = "npm run build"
+  publish = ".output/public" # Nuxt output
+
+[functions]
+  directory = ".netlify/functions" # Nitro functions output
+
+# Redirect API calls to Nitro serverless functions
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/server/:splat"
+  status = 200
+  force = true
+
+# Redirect all other routes to SSR function
+[[redirects]]
+  from = "/*"
+  to = "/.netlify/functions/server"
+  status = 200
+  force = true
