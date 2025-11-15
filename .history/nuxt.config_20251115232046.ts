@@ -14,7 +14,7 @@ export default defineNuxtConfig({
     "@nuxtjs/fontaine",
     "@nuxt/content",
   ],
-  ssr: false, // SPA mode
+  ssr: true, // SSR enabled
   nitro: {
     preset: "netlify",
   },

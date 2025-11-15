@@ -14,10 +14,9 @@ export default defineNuxtConfig({
     "@nuxtjs/fontaine",
     "@nuxt/content",
   ],
-  ssr: false, // SPA mode
-  nitro: {
-    preset: "netlify",
-  },
+  ssr: false,
+  nitro: { preset: "netlify" },
+  
   content: {
     highlight: { theme: "github-dark" },
     navigation: true,
