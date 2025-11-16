@@ -147,15 +147,6 @@
         <!-- Meta Information -->
         <div class="article-meta">
           <div class="meta-left">
-            <!-- <section v-if="authorBio" class="author-bio">
-              <div class="author-avatar">
-                <img width="50" :src="authorBio.avatar" :alt="authorBio.name" />
-              </div>
-              <div class="author-info">
-                <h5 class="mb-1">{{ authorBio.name }}</h5>
-                <p class="author-role">{{ authorBio.role }}</p>
-              </div>
-            </section> -->
             <div class="meta-details">
               <p class="article-date">
                 <i class="far fa-calendar-alt"></i>

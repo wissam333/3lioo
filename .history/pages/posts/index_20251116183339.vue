@@ -152,7 +152,7 @@
               <NuxtLink :to="post._path">{{ post.title }}</NuxtLink>
             </h2>
             <p class="post-description">
-              {{ useTruncateDescription(post.description,10) }}
+              {{ useTruncateDescription(post.description) }}
             </p>
 
             <div class="post-footer">

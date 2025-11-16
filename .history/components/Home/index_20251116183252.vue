@@ -11,7 +11,7 @@
               strategies. Focused on practical security research and analysis.
             </p>
             <div class="hero-actions">
-              <NuxtLink to="/posts" class="btn btn-primary">
+              <NuxtLink to="/blog" class="btn btn-primary">
                 Read Blog
               </NuxtLink>
               <a href="#about" class="btn btn-secondary"> About Me </a>
@@ -68,7 +68,7 @@
               <NuxtLink :to="post._path">{{ post.title }}</NuxtLink>
             </h3>
             <p class="post-excerpt">
-              {{ useTruncateDescription(post.description || post.excerpt, 10) }}
+              {{ useTruncateDescription(post.description || post.excerpt, 20) }}
             </p>
             <div class="post-footer">
               <span class="read-time">{{ post.readTime }}</span>
@@ -77,7 +77,7 @@
           </article>
         </div>
         <div class="writing-actions">
-          <NuxtLink to="/posts" class="btn btn-outline">
+          <NuxtLink to="/blog" class="btn btn-outline">
             View All Posts
           </NuxtLink>
         </div>

@@ -11,7 +11,7 @@
               strategies. Focused on practical security research and analysis.
             </p>
             <div class="hero-actions">
-              <NuxtLink to="/posts" class="btn btn-primary">
+              <NuxtLink to="/blog" class="btn btn-primary">
                 Read Blog
               </NuxtLink>
               <a href="#about" class="btn btn-secondary"> About Me </a>
@@ -77,7 +77,7 @@
           </article>
         </div>
         <div class="writing-actions">
-          <NuxtLink to="/posts" class="btn btn-outline">
+          <NuxtLink to="/blog" class="btn btn-outline">
             View All Posts
           </NuxtLink>
         </div>
