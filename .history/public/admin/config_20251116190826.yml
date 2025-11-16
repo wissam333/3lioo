@@ -68,6 +68,10 @@ collections:
         widget: "string"
         default: "3lioo"
 
+      - label: "Excerpt"
+        name: "excerpt"
+        widget: "text"
+
       - label: "Featured"
         name: "featured"
         widget: "boolean"
@@ -158,12 +162,15 @@ collections:
       # ---- CATEGORY ----
       - label: "Category"
         name: "category"
-        widget: "string"
-        pattern:
-          - "^[a-zA-Z0-9\\-\\s]+$"
-          - "Only letters, numbers, spaces, and hyphens are allowed"
-        default: "Security"
-        hint: "Enter a category (e.g., Security, Threat Intelligence, Vulnerability Analysis)"
+        widget: "select"
+        options:
+          - { label: "Security", value: "security" }
+          - { label: "Threat Intelligence", value: "threat-intel" }
+          - { label: "Vulnerability Analysis", value: "vulnerability" }
+          - { label: "Incident Response", value: "incident-response" }
+          - { label: "Compliance", value: "compliance" }
+          - { label: "Tools & Techniques", value: "tools" }
+        default: "security"
 
       # ---- THREAT LEVEL ----
       - label: "Threat Level"
@@ -258,3 +265,16 @@ collections:
               widget: "string",
               required: false,
             }
+
+  # -------------------------
+  # PAGES COLLECTION
+  # -------------------------
+  - name: "pages"
+    label: "Pages"
+    folder: "content/pages"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Description", name: "description", widget: "text" }
+      - { label: "Body", name: "body", widget: "markdown" }

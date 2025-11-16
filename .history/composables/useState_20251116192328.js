@@ -31,4 +31,5 @@ export const princedomORMap = () => useState(() => true);
 export const useHeadersPages = () => useState(() => null);
 
 export const showModal = () => useState(() => false);
+export const darkTheme = () => useState(() => true);
 export const modalData = () => useState(() => [{ id: 0, info: "", image: "" }]);

@@ -10,7 +10,7 @@
   </header>
 </template>
 <script></script>
-<style lang="scss">
+<style lang="">
 /* Site Header */
 .site-header {
   position: sticky;

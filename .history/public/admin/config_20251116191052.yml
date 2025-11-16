@@ -258,3 +258,16 @@ collections:
               widget: "string",
               required: false,
             }
+
+  # -------------------------
+  # PAGES COLLECTION
+  # -------------------------
+  - name: "pages"
+    label: "Pages"
+    folder: "content/pages"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Description", name: "description", widget: "text" }
+      - { label: "Body", name: "body", widget: "markdown" }

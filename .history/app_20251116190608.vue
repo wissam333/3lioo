@@ -9,6 +9,10 @@
 </template>
 
 <script setup>
+const {
+  public: { api, apiBase },
+} = useRuntimeConfig();
+
 useHead({
   title: "3lioo Blog",
 });

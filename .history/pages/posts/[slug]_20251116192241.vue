@@ -1039,7 +1039,27 @@ const subscribeNewsletter = async () => {
 };
 </script>
 
-<style scoped lang="scss">
+<style scoped>
+/* CSS Variables for consistent theming */
+:root {
+  --primary-color: #a03a3f;
+  --primary-dark: #8a2e32;
+  --primary-light: #f8e8e9;
+  --text-color: #333;
+  --text-light: #666;
+  --text-lighter: #888;
+  --bg-light: #f8f9fa;
+  --bg-lighter: #fafafa;
+  --border-color: #e9ecef;
+  --border-light: #f0f0f0;
+  --shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  --shadow-sm: 0 2px 10px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 8px 25px rgba(0, 0, 0, 0.15);
+  --border-radius: 12px;
+  --border-radius-sm: 8px;
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
 .article-page {
   --sidebar-width: 350px;
   --content-width: calc(100% - var(--sidebar-width) - 40px);
@@ -1050,9 +1070,6 @@ const subscribeNewsletter = async () => {
   max-width: 1400px;
   margin: 0 auto;
   position: relative;
-  background: var(--bg-primary);
-  color: var(--text-primary);
-  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 /* Skip Link */
@@ -1060,8 +1077,8 @@ const subscribeNewsletter = async () => {
   position: absolute;
   top: -40px;
   left: 6px;
-  background: var(--accent-primary);
-  color: var(--bg-primary);
+  background: var(--primary-color);
+  color: white;
   padding: 8px 12px;
   text-decoration: none;
   z-index: 10000;
@@ -1072,7 +1089,7 @@ const subscribeNewsletter = async () => {
 
 .skip-link:focus {
   top: 6px;
-  outline: 2px solid var(--accent-primary);
+  outline: 2px solid var(--primary-color);
   outline-offset: 2px;
 }
 
@@ -1084,19 +1101,17 @@ const subscribeNewsletter = async () => {
   align-items: center;
   min-height: 60vh;
   padding: 40px 20px;
-  background: var(--bg-primary);
-  color: var(--text-primary);
 }
 
 .loading-spinner {
   text-align: center;
-  color: var(--text-secondary);
+  color: var(--text-light);
 }
 
 .loading-spinner i {
   font-size: 2rem;
   margin-bottom: 1rem;
-  color: var(--accent-primary);
+  color: var(--primary-color);
 }
 
 .error-content {
@@ -1111,23 +1126,23 @@ const subscribeNewsletter = async () => {
 }
 
 .error-content h2 {
-  color: var(--text-primary);
+  color: var(--text-color);
   margin-bottom: 1rem;
 }
 
 .retry-btn {
-  background: var(--accent-primary);
-  color: var(--bg-primary);
+  background: var(--primary-color);
+  color: white;
   border: none;
   padding: 10px 20px;
   border-radius: var(--border-radius-sm);
   cursor: pointer;
   font-weight: 500;
   transition: var(--transition);
+}
 
-  &:hover {
-    background: var(--accent-secondary);
-  }
+.retry-btn:hover {
+  background: var(--primary-dark);
 }
 
 /* Reading Progress */
@@ -1145,8 +1160,8 @@ const subscribeNewsletter = async () => {
   height: 100%;
   background: linear-gradient(
     135deg,
-    var(--accent-primary),
-    var(--accent-secondary)
+    var(--primary-color),
+    var(--primary-dark)
   );
   transition: width 0.3s ease;
   border-radius: 0 2px 2px 0;
@@ -1180,17 +1195,17 @@ const subscribeNewsletter = async () => {
 }
 
 .breadcrumb a {
-  color: var(--text-secondary);
+  color: var(--text-light);
   text-decoration: none;
   transition: var(--transition);
+}
 
-  &:hover {
-    color: var(--accent-primary);
-  }
+.breadcrumb a:hover {
+  color: var(--primary-color);
 }
 
 .breadcrumb span {
-  color: var(--text-primary);
+  color: var(--text-color);
   font-weight: 500;
 }
 
@@ -1217,8 +1232,7 @@ const subscribeNewsletter = async () => {
   font-weight: 800;
   line-height: 1.2;
   margin-bottom: 20px;
-  color: var(--text-primary);
-  transition: color 0.3s ease;
+  color: var(--text-color);
 }
 
 .article-meta {
@@ -1228,7 +1242,7 @@ const subscribeNewsletter = async () => {
   flex-wrap: wrap;
   gap: 20px;
   padding-bottom: 20px;
-  border-bottom: 1px solid var(--border-primary);
+  border-bottom: 1px solid var(--border-color);
 }
 
 .meta-left {
@@ -1244,17 +1258,16 @@ const subscribeNewsletter = async () => {
   display: flex;
   align-items: center;
   gap: 8px;
-  color: var(--text-secondary);
+  color: var(--text-light);
   font-size: 14px;
   margin: 0;
-  transition: color 0.3s ease;
 }
 
 .article-date i,
 .article-updated i,
 .article-author i,
 .article-reading-time i {
-  color: var(--accent-primary);
+  color: var(--primary-color);
 }
 
 /* Share Section */
@@ -1267,8 +1280,7 @@ const subscribeNewsletter = async () => {
 
 .share-section span {
   font-weight: 500;
-  color: var(--text-secondary);
-  transition: color 0.3s ease;
+  color: var(--text-light);
 }
 
 .share-buttons {
@@ -1289,22 +1301,22 @@ const subscribeNewsletter = async () => {
   transition: var(--transition);
   font-size: 16px;
   position: relative;
+}
 
-  &:focus {
-    outline: 2px solid var(--accent-primary);
-    outline-offset: 2px;
-  }
+.share-btn:focus {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
+}
 
-  .iconify {
-    color: #fff;
-    width: 20px;
-    height: 20px;
-  }
+.share-btn .iconify {
+  color: #fff;
+  width: 20px;
+  height: 20px;
+}
 
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow);
-  }
+.share-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
 }
 
 .share-btn.native {
@@ -1359,21 +1371,19 @@ const subscribeNewsletter = async () => {
 
 /* Article Excerpt */
 .article-excerpt {
-  background: var(--bg-secondary);
+  background: var(--bg-light);
   padding: 20px;
   border-radius: var(--border-radius-sm);
-  border-left: 4px solid var(--accent-primary);
+  border-left: 4px solid var(--primary-color);
   margin-top: 20px;
-  transition: all 0.3s ease;
 }
 
 .article-excerpt p {
   margin: 0;
   font-size: 1.1rem;
   line-height: 1.6;
-  color: var(--text-primary);
+  color: var(--text-color);
   font-style: italic;
-  transition: color 0.3s ease;
 }
 
 /* Featured Image */
@@ -1428,7 +1438,7 @@ const subscribeNewsletter = async () => {
 }
 
 :deep(.swiper-pagination-bullet-active) {
-  background: var(--accent-primary);
+  background: var(--primary-color);
   opacity: 1;
 }
 
@@ -1440,10 +1450,11 @@ const subscribeNewsletter = async () => {
   height: 50px;
   border-radius: 50%;
   transition: var(--transition);
+}
 
-  &:hover {
-    background: rgba(0, 0, 0, 0.6);
-  }
+:deep(.swiper-button-next):hover,
+:deep(.swiper-button-prev):hover {
+  background: rgba(0, 0, 0, 0.6);
 }
 
 :deep(.swiper-button-next):after,
@@ -1470,52 +1481,46 @@ const subscribeNewsletter = async () => {
   margin-bottom: 40px;
   line-height: 1.8;
   font-size: 1.1rem;
-  color: var(--text-primary);
-  transition: color 0.3s ease;
+  color: var(--text-color);
 }
 
 .no-content {
   text-align: center;
   padding: 60px 20px;
-  color: var(--text-secondary);
+  color: var(--text-light);
 }
 
 .no-content i {
   font-size: 3rem;
   margin-bottom: 1rem;
-  color: var(--border-primary);
+  color: var(--border-color);
 }
 
 :deep(.article-body h2) {
   font-size: 1.8rem;
   margin: 2.5rem 0 1.5rem;
-  color: var(--text-primary);
+  color: var(--text-color);
   padding-bottom: 0.5rem;
-  border-bottom: 2px solid var(--border-primary);
+  border-bottom: 2px solid var(--border-light);
   scroll-margin-top: 100px;
-  transition: all 0.3s ease;
 }
 
 :deep(.article-body h3) {
   font-size: 1.5rem;
   margin: 2rem 0 1rem;
-  color: var(--text-primary);
+  color: var(--text-color);
   scroll-margin-top: 100px;
-  transition: color 0.3s ease;
 }
 
 :deep(.article-body h4) {
   font-size: 1.3rem;
   margin: 1.5rem 0 1rem;
-  color: var(--text-primary);
+  color: var(--text-color);
   scroll-margin-top: 100px;
-  transition: color 0.3s ease;
 }
 
 :deep(.article-body p) {
   margin-bottom: 1.5rem;
-  color: var(--text-primary);
-  transition: color 0.3s ease;
 }
 
 :deep(.article-body img) {
@@ -1527,14 +1532,13 @@ const subscribeNewsletter = async () => {
 }
 
 :deep(.article-body blockquote) {
-  border-left: 4px solid var(--accent-primary);
+  border-left: 4px solid var(--primary-color);
   padding: 1rem 1.5rem;
   margin: 1.5rem 0;
-  background: var(--bg-secondary);
+  background: var(--bg-light);
   font-style: italic;
-  color: var(--text-primary);
+  color: var(--text-color);
   border-radius: 0 var(--border-radius-sm) var(--border-radius-sm) 0;
-  transition: all 0.3s ease;
 }
 
 :deep(.article-body ul),
@@ -1545,40 +1549,35 @@ const subscribeNewsletter = async () => {
 
 :deep(.article-body li) {
   margin-bottom: 0.5rem;
-  color: var(--text-primary);
-  transition: color 0.3s ease;
 }
 
 :deep(.article-body a) {
-  color: var(--accent-primary);
+  color: var(--primary-color);
   text-decoration: none;
   transition: var(--transition);
   text-underline-offset: 2px;
+}
 
-  &:hover {
-    color: var(--accent-secondary);
-    text-decoration: underline;
-  }
+:deep(.article-body a:hover) {
+  color: var(--primary-dark);
+  text-decoration: underline;
 }
 
 :deep(.article-body code) {
-  background: var(--bg-secondary);
+  background: var(--bg-light);
   padding: 2px 6px;
   border-radius: 4px;
   font-size: 0.9em;
-  color: var(--accent-primary);
-  transition: all 0.3s ease;
+  color: var(--primary-dark);
 }
 
 :deep(.article-body pre) {
-  background: var(--bg-tertiary);
-  color: var(--text-primary);
+  background: #1a1a1a;
+  color: #f8f8f2;
   padding: 1.5rem;
   border-radius: var(--border-radius-sm);
   overflow-x: auto;
   margin: 1.5rem 0;
-  border: 1px solid var(--border-primary);
-  transition: all 0.3s ease;
 }
 
 :deep(.article-body pre code) {
@@ -1595,15 +1594,13 @@ const subscribeNewsletter = async () => {
   gap: 15px;
   margin-bottom: 40px;
   padding: 20px 0;
-  border-top: 1px solid var(--border-primary);
-  border-bottom: 1px solid var(--border-primary);
-  transition: border-color 0.3s ease;
+  border-top: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
 }
 
 .tags-label {
   font-weight: 500;
-  color: var(--text-secondary);
-  transition: color 0.3s ease;
+  color: var(--text-light);
 }
 
 .tags-list {
@@ -1613,27 +1610,27 @@ const subscribeNewsletter = async () => {
 }
 
 .tag {
-  background: var(--bg-secondary);
-  color: var(--text-primary);
+  background: var(--primary-light);
+  color: var(--primary-dark);
   padding: 6px 12px;
   border-radius: 20px;
   font-size: 14px;
-  border: 1px solid var(--border-primary);
+  border: 1px solid rgba(160, 58, 63, 0.2);
   text-decoration: none;
   transition: var(--transition);
   font-weight: 500;
+}
 
-  &:focus {
-    outline: 2px solid var(--accent-primary);
-    outline-offset: 2px;
-  }
+.tag:focus {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
+}
 
-  &:hover {
-    background: var(--accent-primary);
-    color: var(--bg-primary);
-    transform: translateY(-1px);
-    box-shadow: var(--shadow-sm);
-  }
+.tag:hover {
+  background: var(--primary-color);
+  color: white;
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
 }
 
 /* Author Bio */
@@ -1641,11 +1638,10 @@ const subscribeNewsletter = async () => {
   display: flex;
   gap: 20px;
   padding: 30px;
-  background: var(--bg-secondary);
+  background: var(--bg-light);
   border-radius: var(--border-radius);
   margin-bottom: 40px;
-  border-left: 4px solid var(--accent-primary);
-  transition: all 0.3s ease;
+  border-left: 4px solid var(--primary-color);
 }
 
 .author-avatar {
@@ -1663,8 +1659,8 @@ const subscribeNewsletter = async () => {
   width: 80px;
   height: 80px;
   border-radius: 50%;
-  background: var(--accent-primary);
-  color: var(--bg-primary);
+  background: var(--primary-color);
+  color: white;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1679,12 +1675,11 @@ const subscribeNewsletter = async () => {
 .author-name {
   font-size: 1.3rem;
   margin: 0 0 0.5rem;
-  color: var(--text-primary);
-  transition: color 0.3s ease;
+  color: var(--text-color);
 }
 
 .author-role {
-  color: var(--accent-primary);
+  color: var(--primary-color);
   font-weight: 500;
   margin: 0 0 1rem;
   font-size: 0.95rem;
@@ -1692,9 +1687,8 @@ const subscribeNewsletter = async () => {
 
 .author-bio-text {
   line-height: 1.6;
-  color: var(--text-primary);
+  color: var(--text-color);
   margin: 0 0 1rem;
-  transition: color 0.3s ease;
 }
 
 .author-social {
@@ -1703,38 +1697,37 @@ const subscribeNewsletter = async () => {
 }
 
 .social-link {
-  color: var(--text-secondary);
+  color: var(--text-light);
   transition: var(--transition);
   padding: 8px;
   border-radius: 6px;
-  background: var(--bg-primary);
+  background: white;
   box-shadow: var(--shadow-sm);
+}
 
-  &:hover {
-    color: var(--accent-primary);
-    transform: translateY(-2px);
-    box-shadow: var(--shadow);
-  }
+.social-link:hover {
+  color: var(--primary-color);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+}
 
-  .iconify {
-    width: 18px;
-    height: 18px;
-  }
+.social-link .iconify {
+  width: 18px;
+  height: 18px;
 }
 
 /* Sections */
 .section-title {
   font-size: 1.6rem;
   margin-bottom: 1.5rem;
-  color: var(--text-primary);
+  color: var(--text-color);
   display: flex;
   align-items: center;
   gap: 10px;
-  transition: color 0.3s ease;
 }
 
 .section-title i {
-  color: var(--accent-primary);
+  color: var(--primary-color);
 }
 
 /* Attachments */
@@ -1749,17 +1742,17 @@ const subscribeNewsletter = async () => {
 }
 
 .attachment-card {
-  background: var(--bg-primary);
+  background: white;
   border-radius: var(--border-radius-sm);
   overflow: hidden;
   box-shadow: var(--shadow-sm);
   transition: var(--transition);
-  border: 1px solid var(--border-primary);
+  border: 1px solid var(--border-light);
+}
 
-  &:hover {
-    transform: translateY(-3px);
-    box-shadow: var(--shadow);
-  }
+.attachment-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow);
 }
 
 .attachment-link {
@@ -1769,23 +1762,23 @@ const subscribeNewsletter = async () => {
   text-decoration: none;
   color: inherit;
   transition: var(--transition);
+}
 
-  &:focus {
-    outline: 2px solid var(--accent-primary);
-    outline-offset: 2px;
-  }
+.attachment-link:focus {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
 }
 
 .attachment-icon {
   width: 40px;
   height: 40px;
-  background: var(--bg-secondary);
+  background: var(--primary-light);
   border-radius: var(--border-radius-sm);
   display: flex;
   align-items: center;
   justify-content: center;
   margin-right: 1rem;
-  color: var(--accent-primary);
+  color: var(--primary-color);
   font-size: 1.2rem;
   flex-shrink: 0;
 }
@@ -1798,16 +1791,14 @@ const subscribeNewsletter = async () => {
 
 .attachment-name {
   font-weight: 500;
-  color: var(--text-primary);
+  color: var(--text-color);
   margin-bottom: 0.2rem;
   word-break: break-word;
-  transition: color 0.3s ease;
 }
 
 .attachment-description {
   font-size: 0.8rem;
-  color: var(--text-secondary);
-  transition: color 0.3s ease;
+  color: var(--text-light);
 }
 
 /* Related Posts */
@@ -1822,17 +1813,17 @@ const subscribeNewsletter = async () => {
 }
 
 .related-card {
-  background: var(--bg-primary);
+  background: white;
   border-radius: var(--border-radius);
   overflow: hidden;
   box-shadow: var(--shadow-sm);
   transition: var(--transition);
-  border: 1px solid var(--border-primary);
+  border: 1px solid var(--border-light);
+}
 
-  &:hover {
-    transform: translateY(-5px);
-    box-shadow: var(--shadow-lg);
-  }
+.related-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-lg);
 }
 
 .related-link {
@@ -1865,25 +1856,23 @@ const subscribeNewsletter = async () => {
 .related-title {
   font-size: 1.1rem;
   margin: 0 0 0.5rem;
-  color: var(--text-primary);
+  color: var(--text-color);
   line-height: 1.4;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  transition: color 0.3s ease;
 }
 
 .related-excerpt {
   font-size: 0.9rem;
-  color: var(--text-secondary);
+  color: var(--text-light);
   margin: 0 0 1rem;
   line-height: 1.5;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  transition: color 0.3s ease;
 }
 
 .related-meta {
@@ -1891,8 +1880,7 @@ const subscribeNewsletter = async () => {
   justify-content: space-between;
   align-items: center;
   font-size: 0.8rem;
-  color: var(--text-tertiary);
-  transition: color 0.3s ease;
+  color: var(--text-lighter);
 }
 
 /* Newsletter */
@@ -1903,12 +1891,12 @@ const subscribeNewsletter = async () => {
 .newsletter-card {
   background: linear-gradient(
     135deg,
-    var(--accent-primary),
-    var(--accent-secondary)
+    var(--primary-color),
+    var(--primary-dark)
   );
   border-radius: var(--border-radius);
   overflow: hidden;
-  color: var(--bg-primary);
+  color: white;
   padding: 2.5rem;
   text-align: center;
 }
@@ -1939,13 +1927,11 @@ const subscribeNewsletter = async () => {
   border-radius: var(--border-radius-sm);
   font-size: 1rem;
   min-width: 0;
-  background: rgba(255, 255, 255, 0.9);
+}
 
-  &:focus {
-    outline: 2px solid rgba(255, 255, 255, 0.5);
-    outline-offset: 2px;
-    background: white;
-  }
+.newsletter-input:focus {
+  outline: 2px solid rgba(255, 255, 255, 0.5);
+  outline-offset: 2px;
 }
 
 .newsletter-btn {
@@ -1961,15 +1947,15 @@ const subscribeNewsletter = async () => {
   display: flex;
   align-items: center;
   justify-content: center;
+}
 
-  &:hover:not(:disabled) {
-    background: #000;
-  }
+.newsletter-btn:hover:not(:disabled) {
+  background: #000;
+}
 
-  &:disabled {
-    opacity: 0.7;
-    cursor: not-allowed;
-  }
+.newsletter-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
 }
 
 .loading-spinner-small {
@@ -2001,8 +1987,10 @@ const subscribeNewsletter = async () => {
   margin-bottom: 20px;
   align-self: flex-start;
   overflow-y: auto;
+
+  /* Enhanced Scrollbar Styling */
   scrollbar-width: thin;
-  scrollbar-color: var(--text-tertiary) transparent;
+  scrollbar-color: #c1c1c1 transparent;
   scroll-behavior: smooth;
 }
 
@@ -2019,32 +2007,31 @@ const subscribeNewsletter = async () => {
 }
 
 .sidebar::-webkit-scrollbar-thumb {
-  background: var(--text-tertiary);
+  background: #c1c1c1;
   border-radius: 10px;
   border: 2px solid transparent;
   background-clip: content-box;
   transition: var(--transition);
+}
 
-  &:hover {
-    background: var(--accent-primary);
-    border: 1px solid transparent;
-    background-clip: content-box;
-  }
+.sidebar::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-color);
+  border: 1px solid transparent;
+  background-clip: content-box;
+}
 
-  &:active {
-    background: var(--accent-secondary);
-  }
+.sidebar::-webkit-scrollbar-thumb:active {
+  background: var(--primary-dark);
 }
 
 /* Table of Contents */
 .toc-sidebar {
-  background: var(--bg-primary);
+  background: white;
   border-radius: var(--border-radius);
   padding: 24px;
   box-shadow: var(--shadow-sm);
-  border: 1px solid var(--border-primary);
+  border: 1px solid var(--border-light);
   margin-bottom: 24px;
-  transition: all 0.3s ease;
 }
 
 .toc-nav ul {
@@ -2061,26 +2048,26 @@ const subscribeNewsletter = async () => {
 .toc-nav a {
   display: block;
   padding: 8px 12px;
-  color: var(--text-primary);
+  color: var(--text-color);
   text-decoration: none;
   border-radius: var(--border-radius-sm);
   transition: var(--transition);
   font-size: 0.9rem;
   line-height: 1.4;
   border-left: 3px solid transparent;
+}
 
-  &:hover {
-    background: var(--bg-secondary);
-    color: var(--accent-primary);
-    border-left-color: var(--accent-primary);
-  }
+.toc-nav a:hover {
+  background: var(--bg-light);
+  color: var(--primary-color);
+  border-left-color: var(--primary-color);
+}
 
-  &.active {
-    background: var(--bg-secondary);
-    color: var(--accent-primary);
-    border-left-color: var(--accent-primary);
-    font-weight: 500;
-  }
+.toc-nav a.active {
+  background: var(--primary-light);
+  color: var(--primary-dark);
+  border-left-color: var(--primary-color);
+  font-weight: 500;
 }
 
 .toc-level-3 {
@@ -2095,29 +2082,27 @@ const subscribeNewsletter = async () => {
 
 /* Most Viewed Sidebar */
 .most-viewed-sidebar {
-  background: var(--bg-primary);
+  background: white;
   border-radius: var(--border-radius);
   padding: 24px;
   box-shadow: var(--shadow-sm);
-  border: 1px solid var(--border-primary);
-  transition: all 0.3s ease;
+  border: 1px solid var(--border-light);
 }
 
 .sidebar-title {
   font-size: 1.25rem;
   font-weight: 700;
-  color: var(--text-primary);
+  color: var(--text-color);
   margin-bottom: 20px;
   display: flex;
   align-items: center;
   gap: 10px;
   padding-bottom: 12px;
-  border-bottom: 2px solid var(--border-primary);
-  transition: all 0.3s ease;
+  border-bottom: 2px solid var(--border-light);
 }
 
 .sidebar-title i {
-  color: var(--accent-primary);
+  color: var(--primary-color);
   font-size: 1.1rem;
 }
 
@@ -2131,11 +2116,11 @@ const subscribeNewsletter = async () => {
   transition: var(--transition);
   border-radius: var(--border-radius-sm);
   overflow: hidden;
+}
 
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-lg);
-  }
+.sidebar-item:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
 }
 
 .sidebar-link {
@@ -2145,37 +2130,37 @@ const subscribeNewsletter = async () => {
   padding: 16px;
   text-decoration: none;
   color: inherit;
-  background: var(--bg-secondary);
+  background: var(--bg-lighter);
   border-radius: var(--border-radius-sm);
-  border: 1px solid var(--border-primary);
+  border: 1px solid var(--border-light);
   transition: var(--transition);
   position: relative;
   overflow: hidden;
+}
 
-  &::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 3px;
-    height: 100%;
-    background: linear-gradient(
-      135deg,
-      var(--accent-primary),
-      var(--accent-secondary)
-    );
-    opacity: 0;
-    transition: opacity 0.3s ease;
-  }
+.sidebar-link::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 3px;
+  height: 100%;
+  background: linear-gradient(
+    135deg,
+    var(--primary-color),
+    var(--primary-dark)
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
 
-  &:hover::before {
-    opacity: 1;
-  }
+.sidebar-item:hover .sidebar-link::before {
+  opacity: 1;
 }
 
 .sidebar-item:hover .sidebar-link {
-  background: var(--bg-primary);
-  border-color: var(--border-secondary);
+  background: white;
+  border-color: var(--border-color);
   box-shadow: var(--shadow);
 }
 
@@ -2231,10 +2216,12 @@ const subscribeNewsletter = async () => {
   background: #10b981;
   color: white;
 }
+
 .trend-down {
   background: #ef4444;
   color: white;
 }
+
 .trend-stable {
   background: #6b7280;
   color: white;
@@ -2250,7 +2237,7 @@ const subscribeNewsletter = async () => {
   font-size: 0.95rem;
   font-weight: 600;
   line-height: 1.4;
-  color: var(--text-primary);
+  color: var(--text-color);
   margin: 0 0 8px 0;
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -2258,7 +2245,6 @@ const subscribeNewsletter = async () => {
   overflow: hidden;
   text-overflow: ellipsis;
   max-height: 2.8em;
-  transition: color 0.3s ease;
 }
 
 /* Meta Information */
@@ -2282,9 +2268,8 @@ const subscribeNewsletter = async () => {
   align-items: center;
   gap: 4px;
   font-size: 0.75rem;
-  color: var(--text-secondary);
+  color: var(--text-light);
   white-space: nowrap;
-  transition: color 0.3s ease;
 }
 
 .sidebar-date i,
@@ -2307,54 +2292,34 @@ const subscribeNewsletter = async () => {
 }
 
 .threat-info {
-  background: rgba(33, 150, 243, 0.1);
-  color: #2196f3;
-
-  [data-theme="dark"] & {
-    background: rgba(33, 150, 243, 0.2);
-    color: #64b5f6;
-  }
+  background: #dbeafe;
+  color: #1e40af;
+  border: 1px solid #bfdbfe;
 }
 
 .threat-low {
-  background: rgba(76, 175, 80, 0.1);
-  color: #4caf50;
-
-  [data-theme="dark"] & {
-    background: rgba(76, 175, 80, 0.2);
-    color: #81c784;
-  }
+  background: #dcfce7;
+  color: #166534;
+  border: 1px solid #bbf7d0;
 }
 
 .threat-medium {
-  background: rgba(255, 152, 0, 0.1);
-  color: #ff9800;
-
-  [data-theme="dark"] & {
-    background: rgba(255, 152, 0, 0.2);
-    color: #ffb74d;
-  }
+  background: #fef3c7;
+  color: #92400e;
+  border: 1px solid #fde68a;
 }
 
 .threat-high {
-  background: rgba(244, 67, 54, 0.1);
-  color: #f44336;
-
-  [data-theme="dark"] & {
-    background: rgba(244, 67, 54, 0.2);
-    color: #e57373;
-  }
+  background: #fed7aa;
+  color: #9a3412;
+  border: 1px solid #fdba74;
 }
 
 .threat-critical {
-  background: rgba(156, 39, 176, 0.1);
-  color: #9c27b0;
-  font-weight: 600;
-
-  [data-theme="dark"] & {
-    background: rgba(156, 39, 176, 0.2);
-    color: #ba68c8;
-  }
+  background: #fecaca;
+  color: #991b1b;
+  border: 1px solid #fca5a5;
+  animation: pulse 2s infinite;
 }
 
 .threat-badge.threat-info {
@@ -2475,6 +2440,7 @@ const subscribeNewsletter = async () => {
   }
 
   .attachments-grid,
+  .video-grid,
   .related-grid {
     grid-template-columns: 1fr;
   }

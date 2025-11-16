@@ -1,5 +1,15 @@
 <template>
   <div class="homepage">
+    <!-- Add theme toggle in header/navigation -->
+    <header class="site-header">
+      <div class="container">
+        <div class="header-content">
+          <NuxtLink to="/" class="logo">Security Blog</NuxtLink>
+          <ThemeToggle />
+        </div>
+      </div>
+    </header>
+
     <!-- Minimal Hero Section -->
     <section class="hero">
       <div class="container">
@@ -68,7 +78,7 @@
               <NuxtLink :to="post._path">{{ post.title }}</NuxtLink>
             </h3>
             <p class="post-excerpt">
-              {{ useTruncateDescription(post.description, 10) }}
+              {{ post.description }}
             </p>
             <div class="post-footer">
               <span class="read-time">{{ post.readTime }}</span>
@@ -121,6 +131,34 @@ useSeoMeta({
   background: var(--bg-primary);
   color: var(--text-primary);
   transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Site Header */
+.site-header {
+  position: sticky;
+  top: 0;
+  background: var(--bg-primary);
+  border-bottom: 1px solid var(--border-primary);
+  z-index: 1000;
+  transition: all 0.3s ease;
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 0;
+}
+
+.logo {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  text-decoration: none;
+
+  &:hover {
+    color: var(--accent-secondary);
+  }
 }
 
 /* Hero Section */

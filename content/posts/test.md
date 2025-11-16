@@ -52,7 +52,7 @@ relatedPosts:
   - 2024-01-10-jndi-injection-fundamentals
   - 2024-01-08-enterprise-patch-management
   - 2024-01-05-threat-hunting-techniques
-visits: 80
+visits: 81
 ---
 
 ## Executive Summary

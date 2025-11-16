@@ -25,24 +25,8 @@
               placeholder="Search research..."
               class="search-input"
               aria-label="Search posts"
+              @input="handleSearchInput"
             />
-          </div>
-
-          <div class="filter-group">
-            <select
-              v-model="selectedCategory"
-              class="filter-select"
-              aria-label="Select category"
-            >
-              <option value="">All Categories</option>
-              <option
-                v-for="category in categories"
-                :key="category"
-                :value="category"
-              >
-                {{ category }}
-              </option>
-            </select>
           </div>
 
           <div class="filter-group">
@@ -78,19 +62,9 @@
           <span v-if="searchQuery" class="filter-tag">
             Search: "{{ searchQuery }}"
             <button
-              @click="searchQuery = ''"
+              @click="clearSearch"
               class="filter-remove"
               aria-label="Remove search filter"
-            >
-              ×
-            </button>
-          </span>
-          <span v-if="selectedCategory" class="filter-tag">
-            Category: {{ selectedCategory }}
-            <button
-              @click="selectedCategory = ''"
-              class="filter-remove"
-              aria-label="Remove category filter"
             >
               ×
             </button>
@@ -152,7 +126,7 @@
               <NuxtLink :to="post._path">{{ post.title }}</NuxtLink>
             </h2>
             <p class="post-description">
-              {{ useTruncateDescription(post.description, 10) }}
+              {{ post.description || post.excerpt }}
             </p>
 
             <div class="post-footer">
@@ -228,7 +202,6 @@ const filteredPosts = computed(() => {
   if (!allPosts.value) return [];
   let filtered = allPosts.value;
 
-  // Use debouncedSearchQuery instead of searchQuery
   if (debouncedSearchQuery.value) {
     const q = debouncedSearchQuery.value.toLowerCase();
     filtered = filtered.filter(
@@ -277,7 +250,6 @@ const clearSearch = () => {
   debouncedSearchQuery.value = "";
   if (searchTimeout) {
     clearTimeout(searchTimeout);
-    searchTimeout = null;
   }
 };
 

@@ -85,7 +85,7 @@
               ×
             </button>
           </span>
-          <span v-if="selectedCategory" class="filter-tag">
+          <!-- <span v-if="selectedCategory" class="filter-tag">
             Category: {{ selectedCategory }}
             <button
               @click="selectedCategory = ''"
@@ -94,7 +94,7 @@
             >
               ×
             </button>
-          </span>
+          </span> -->
           <span v-if="selectedThreatLevel" class="filter-tag">
             Threat: {{ getThreatLevelText(selectedThreatLevel) }}
             <button
@@ -201,42 +201,37 @@ const { data: allPosts } = await useAsyncData("posts", () =>
 
 // Reactive data
 const searchQuery = ref("");
+const selectedCategory = ref("");
 const selectedThreatLevel = ref("");
 const sortBy = ref("date-desc");
 
-// Debounced search to prevent too many computations
-const debouncedSearchQuery = ref("");
-let searchTimeout = null;
-
-const handleSearchInput = (event) => {
-  searchQuery.value = event.target.value;
-
-  // Clear previous timeout
-  if (searchTimeout) {
-    clearTimeout(searchTimeout);
-  }
-
-  // Set new timeout for debouncing
-  searchTimeout = setTimeout(() => {
-    debouncedSearchQuery.value = searchQuery.value;
-    currentPage = 1; // Reset to first page when search changes
-  }, 300); // 300ms delay
-};
+// Computed categories
+const categories = computed(() => {
+  if (!allPosts.value) return [];
+  return [
+    ...new Set(allPosts.value.map((p) => p.category || "Security")),
+  ].sort();
+});
 
 // Filtered & sorted posts
 const filteredPosts = computed(() => {
   if (!allPosts.value) return [];
   let filtered = allPosts.value;
 
-  // Use debouncedSearchQuery instead of searchQuery
-  if (debouncedSearchQuery.value) {
-    const q = debouncedSearchQuery.value.toLowerCase();
+  if (searchQuery.value) {
+    const q = searchQuery.value.toLowerCase();
     filtered = filtered.filter(
       (p) =>
         p.title?.toLowerCase().includes(q) ||
         p.description?.toLowerCase().includes(q) ||
         p.body?.toLowerCase().includes(q) ||
         p.tags?.some((tag) => tag.toLowerCase().includes(q))
+    );
+  }
+
+  if (selectedCategory.value) {
+    filtered = filtered.filter(
+      (p) => (p.category || "Security") === selectedCategory.value
     );
   }
 
@@ -262,7 +257,7 @@ const filteredPosts = computed(() => {
 });
 
 const hasActiveFilters = computed(
-  () => searchQuery.value || selectedThreatLevel.value
+  () => searchQuery.value || selectedCategory.value || selectedThreatLevel.value
 );
 const showLoadMore = computed(
   () => filteredPosts.value.length < (allPosts.value?.length || 0)
@@ -271,29 +266,18 @@ const showLoadMore = computed(
 const loadMore = () => {
   currentPage++;
 };
-
-const clearSearch = () => {
-  searchQuery.value = "";
-  debouncedSearchQuery.value = "";
-  if (searchTimeout) {
-    clearTimeout(searchTimeout);
-    searchTimeout = null;
-  }
-};
-
 const clearAllFilters = () => {
-  clearSearch();
+  searchQuery.value = "";
+  selectedCategory.value = "";
   selectedThreatLevel.value = "";
   currentPage = 1;
 };
-
 const formatDate = (d) =>
   new Date(d).toLocaleDateString("en-US", {
     year: "numeric",
     month: "short",
     day: "numeric",
   });
-
 const getThreatLevelText = (level) =>
   ({
     low: "Low Risk",
@@ -302,13 +286,6 @@ const getThreatLevelText = (level) =>
     critical: "Critical",
     info: "Research",
   }[level] || "Research");
-
-// Cleanup timeout on component unmount
-onUnmounted(() => {
-  if (searchTimeout) {
-    clearTimeout(searchTimeout);
-  }
-});
 
 // SEO
 useSeoMeta({

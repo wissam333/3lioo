@@ -201,42 +201,37 @@ const { data: allPosts } = await useAsyncData("posts", () =>
 
 // Reactive data
 const searchQuery = ref("");
+const selectedCategory = ref("");
 const selectedThreatLevel = ref("");
 const sortBy = ref("date-desc");
 
-// Debounced search to prevent too many computations
-const debouncedSearchQuery = ref("");
-let searchTimeout = null;
-
-const handleSearchInput = (event) => {
-  searchQuery.value = event.target.value;
-
-  // Clear previous timeout
-  if (searchTimeout) {
-    clearTimeout(searchTimeout);
-  }
-
-  // Set new timeout for debouncing
-  searchTimeout = setTimeout(() => {
-    debouncedSearchQuery.value = searchQuery.value;
-    currentPage = 1; // Reset to first page when search changes
-  }, 300); // 300ms delay
-};
+// Computed categories
+const categories = computed(() => {
+  if (!allPosts.value) return [];
+  return [
+    ...new Set(allPosts.value.map((p) => p.category || "Security")),
+  ].sort();
+});
 
 // Filtered & sorted posts
 const filteredPosts = computed(() => {
   if (!allPosts.value) return [];
   let filtered = allPosts.value;
 
-  // Use debouncedSearchQuery instead of searchQuery
-  if (debouncedSearchQuery.value) {
-    const q = debouncedSearchQuery.value.toLowerCase();
+  if (searchQuery.value) {
+    const q = searchQuery.value.toLowerCase();
     filtered = filtered.filter(
       (p) =>
         p.title?.toLowerCase().includes(q) ||
         p.description?.toLowerCase().includes(q) ||
         p.body?.toLowerCase().includes(q) ||
         p.tags?.some((tag) => tag.toLowerCase().includes(q))
+    );
+  }
+
+  if (selectedCategory.value) {
+    filtered = filtered.filter(
+      (p) => (p.category || "Security") === selectedCategory.value
     );
   }
 
@@ -262,7 +257,7 @@ const filteredPosts = computed(() => {
 });
 
 const hasActiveFilters = computed(
-  () => searchQuery.value || selectedThreatLevel.value
+  () => searchQuery.value || selectedCategory.value || selectedThreatLevel.value
 );
 const showLoadMore = computed(
   () => filteredPosts.value.length < (allPosts.value?.length || 0)
@@ -271,29 +266,18 @@ const showLoadMore = computed(
 const loadMore = () => {
   currentPage++;
 };
-
-const clearSearch = () => {
-  searchQuery.value = "";
-  debouncedSearchQuery.value = "";
-  if (searchTimeout) {
-    clearTimeout(searchTimeout);
-    searchTimeout = null;
-  }
-};
-
 const clearAllFilters = () => {
-  clearSearch();
+  searchQuery.value = "";
+  selectedCategory.value = "";
   selectedThreatLevel.value = "";
   currentPage = 1;
 };
-
 const formatDate = (d) =>
   new Date(d).toLocaleDateString("en-US", {
     year: "numeric",
     month: "short",
     day: "numeric",
   });
-
 const getThreatLevelText = (level) =>
   ({
     low: "Low Risk",
@@ -303,13 +287,6 @@ const getThreatLevelText = (level) =>
     info: "Research",
   }[level] || "Research");
 
-// Cleanup timeout on component unmount
-onUnmounted(() => {
-  if (searchTimeout) {
-    clearTimeout(searchTimeout);
-  }
-});
-
 // SEO
 useSeoMeta({
   title: "Security Research - Threat Intelligence & Analysis",
@@ -318,20 +295,18 @@ useSeoMeta({
 });
 </script>
 
-<style scoped lang="scss">
+<style scoped>
 .blog-page {
   min-height: 100vh;
-  background: var(--bg-primary);
-  color: var(--text-primary);
-  transition: background-color 0.3s ease, color 0.3s ease;
+  background: #ffffff;
+  color: #1a1a1a;
 }
 
 /* Blog Hero */
 .blog-hero {
   padding: 80px 0 60px;
-  background: var(--bg-secondary);
-  border-bottom: 1px solid var(--border-primary);
-  transition: all 0.3s ease;
+  background: #f8f9fa;
+  border-bottom: 1px solid #e9ecef;
 }
 
 .blog-hero-content {
@@ -344,24 +319,21 @@ useSeoMeta({
   font-size: 2.5rem;
   font-weight: 700;
   margin-bottom: 1rem;
-  color: var(--text-primary);
+  color: #1a1a1a;
   line-height: 1.1;
-  transition: color 0.3s ease;
 }
 
 .blog-subtitle {
   font-size: 1.125rem;
   line-height: 1.6;
-  color: var(--text-secondary);
-  transition: color 0.3s ease;
+  color: #666;
 }
 
 /* Filters */
 .blog-filters {
   padding: 40px 0;
-  background: var(--bg-primary);
-  border-bottom: 1px solid var(--border-primary);
-  transition: all 0.3s ease;
+  background: #ffffff;
+  border-bottom: 1px solid #e9ecef;
 }
 
 .filters-grid {
@@ -380,51 +352,45 @@ useSeoMeta({
   left: 1rem;
   top: 50%;
   transform: translateY(-50%);
-  color: var(--text-tertiary);
-  transition: color 0.3s ease;
+  color: #666;
 }
 
 .search-input {
   width: 100%;
   padding: 0.75rem 1rem 0.75rem 3rem;
-  background: var(--bg-primary);
-  border: 1px solid var(--border-primary);
+  background: #ffffff;
+  border: 1px solid #ddd;
   border-radius: 4px;
-  color: var(--text-primary);
+  color: #1a1a1a;
   font-size: 1rem;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
+}
 
-  &:focus {
-    outline: none;
-    border-color: var(--accent-primary);
-    box-shadow: 0 0 0 2px var(--shadow);
-  }
+.search-input:focus {
+  outline: none;
+  border-color: #1a1a1a;
+  box-shadow: 0 0 0 2px rgba(26, 26, 26, 0.1);
+}
 
-  &::placeholder {
-    color: var(--text-tertiary);
-  }
+.search-input::placeholder {
+  color: #999;
 }
 
 .filter-select {
   width: 100%;
   padding: 0.75rem 1rem;
-  background: var(--bg-primary);
-  border: 1px solid var(--border-primary);
+  background: #ffffff;
+  border: 1px solid #ddd;
   border-radius: 4px;
-  color: var(--text-primary);
+  color: #1a1a1a;
   font-size: 1rem;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: border-color 0.2s ease;
+}
 
-  &:focus {
-    outline: none;
-    border-color: var(--accent-primary);
-  }
-
-  option {
-    background: var(--bg-primary);
-    color: var(--text-primary);
-  }
+.filter-select:focus {
+  outline: none;
+  border-color: #1a1a1a;
 }
 
 .active-filters {
@@ -434,36 +400,33 @@ useSeoMeta({
   gap: 0.75rem;
   margin-top: 1.5rem;
   padding: 1rem;
-  background: var(--bg-secondary);
+  background: #f8f9fa;
   border-radius: 4px;
-  border: 1px solid var(--border-primary);
-  transition: all 0.3s ease;
+  border: 1px solid #e9ecef;
 }
 
 .active-filters-label {
-  color: var(--text-secondary);
+  color: #666;
   font-weight: 500;
   font-size: 0.875rem;
-  transition: color 0.3s ease;
 }
 
 .filter-tag {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  background: var(--bg-primary);
-  color: var(--text-primary);
+  background: #ffffff;
+  color: #1a1a1a;
   padding: 0.375rem 0.75rem;
   border-radius: 20px;
   font-size: 0.8rem;
-  border: 1px solid var(--border-primary);
-  transition: all 0.3s ease;
+  border: 1px solid #ddd;
 }
 
 .filter-remove {
   background: none;
   border: none;
-  color: var(--text-secondary);
+  color: #666;
   cursor: pointer;
   font-size: 1.1rem;
   line-height: 1;
@@ -474,12 +437,11 @@ useSeoMeta({
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  transition: all 0.3s ease;
+}
 
-  &:hover {
-    background: var(--bg-secondary);
-    color: #ff4444;
-  }
+.filter-remove:hover {
+  background: #f8f9fa;
+  color: #ff4444;
 }
 
 .clear-all {
@@ -491,19 +453,18 @@ useSeoMeta({
   cursor: pointer;
   font-size: 0.8rem;
   margin-left: auto;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
+}
 
-  &:hover {
-    background: #ff4444;
-    color: #ffffff;
-  }
+.clear-all:hover {
+  background: #ff4444;
+  color: #ffffff;
 }
 
 /* Blog Posts */
 .blog-posts {
   padding: 60px 0;
-  background: var(--bg-primary);
-  transition: all 0.3s ease;
+  background: #ffffff;
 }
 
 .posts-grid {
@@ -514,17 +475,17 @@ useSeoMeta({
 }
 
 .post-card {
-  background: var(--bg-primary);
+  background: #ffffff;
   padding: 2rem;
   border-radius: 4px;
-  border: 1px solid var(--border-primary);
-  transition: all 0.3s ease;
+  border: 1px solid #e9ecef;
+  transition: all 0.2s ease;
+}
 
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px var(--shadow);
-    border-color: var(--border-secondary);
-  }
+.post-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  border-color: #1a1a1a;
 }
 
 .post-meta {
@@ -533,10 +494,9 @@ useSeoMeta({
   align-items: center;
   margin-bottom: 1rem;
   font-size: 0.875rem;
-  color: var(--text-secondary);
+  color: #666;
   flex-wrap: wrap;
   gap: 0.5rem;
-  transition: color 0.3s ease;
 }
 
 .post-category {
@@ -552,83 +512,53 @@ useSeoMeta({
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  transition: all 0.3s ease;
 }
 
-// Threat level colors that work in both themes
 .threat-level.info {
-  background: rgba(33, 150, 243, 0.1);
-  color: #2196f3;
-
-  [data-theme="dark"] & {
-    background: rgba(33, 150, 243, 0.2);
-    color: #64b5f6;
-  }
+  background: #e3f2fd;
+  color: #1976d2;
 }
 
 .threat-level.low {
-  background: rgba(76, 175, 80, 0.1);
-  color: #4caf50;
-
-  [data-theme="dark"] & {
-    background: rgba(76, 175, 80, 0.2);
-    color: #81c784;
-  }
+  background: #e8f5e8;
+  color: #2e7d32;
 }
 
 .threat-level.medium {
-  background: rgba(255, 152, 0, 0.1);
-  color: #ff9800;
-
-  [data-theme="dark"] & {
-    background: rgba(255, 152, 0, 0.2);
-    color: #ffb74d;
-  }
+  background: #fff3e0;
+  color: #f57c00;
 }
 
 .threat-level.high {
-  background: rgba(244, 67, 54, 0.1);
-  color: #f44336;
-
-  [data-theme="dark"] & {
-    background: rgba(244, 67, 54, 0.2);
-    color: #e57373;
-  }
+  background: #ffebee;
+  color: #c62828;
 }
 
 .threat-level.critical {
-  background: rgba(156, 39, 176, 0.1);
-  color: #9c27b0;
+  background: #fce4ec;
+  color: #ad1457;
   font-weight: 600;
-
-  [data-theme="dark"] & {
-    background: rgba(156, 39, 176, 0.2);
-    color: #ba68c8;
-  }
 }
 
 .post-title {
   font-size: 1.25rem;
   margin-bottom: 1rem;
   line-height: 1.4;
-  transition: color 0.3s ease;
 }
 
 .post-title a {
-  color: var(--text-primary);
+  color: #1a1a1a;
   text-decoration: none;
-  transition: color 0.3s ease;
+}
 
-  &:hover {
-    color: var(--accent-secondary);
-  }
+.post-title a:hover {
+  color: #333;
 }
 
 .post-description {
-  color: var(--text-secondary);
+  color: #666;
   line-height: 1.6;
   margin-bottom: 1.5rem;
-  transition: color 0.3s ease;
 }
 
 .post-footer {
@@ -646,13 +576,12 @@ useSeoMeta({
 }
 
 .post-tag {
-  background: var(--bg-secondary);
-  color: var(--text-secondary);
+  background: #f8f9fa;
+  color: #666;
   padding: 0.25rem 0.5rem;
   border-radius: 4px;
   font-size: 0.75rem;
-  border: 1px solid var(--border-primary);
-  transition: all 0.3s ease;
+  border: 1px solid #e9ecef;
 }
 
 .post-actions {
@@ -660,19 +589,18 @@ useSeoMeta({
   align-items: center;
   gap: 1rem;
   font-size: 0.875rem;
-  color: var(--text-secondary);
-  transition: color 0.3s ease;
+  color: #666;
 }
 
 .read-more {
-  color: var(--text-primary);
+  color: #1a1a1a;
   text-decoration: none;
   font-weight: 500;
-  transition: color 0.3s ease;
+  transition: color 0.2s ease;
+}
 
-  &:hover {
-    color: var(--accent-secondary);
-  }
+.read-more:hover {
+  color: #333;
 }
 
 .no-results {
@@ -684,20 +612,17 @@ useSeoMeta({
   font-size: 3rem;
   margin-bottom: 1.5rem;
   opacity: 0.5;
-  color: var(--text-secondary);
 }
 
 .no-results h3 {
   font-size: 1.5rem;
   margin-bottom: 0.75rem;
-  color: var(--text-primary);
-  transition: color 0.3s ease;
+  color: #1a1a1a;
 }
 
 .no-results p {
-  color: var(--text-secondary);
+  color: #666;
   margin-bottom: 2rem;
-  transition: color 0.3s ease;
 }
 
 .load-more {
@@ -712,32 +637,31 @@ useSeoMeta({
   border-radius: 4px;
   text-decoration: none;
   font-weight: 500;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
   border: 1px solid transparent;
   cursor: pointer;
   font-size: 1rem;
 }
 
 .btn-primary {
-  background: var(--accent-primary);
-  color: var(--bg-primary);
+  background: #1a1a1a;
+  color: #ffffff;
+}
 
-  &:hover {
-    background: var(--accent-secondary);
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px var(--shadow);
-  }
+.btn-primary:hover {
+  background: #333;
+  transform: translateY(-1px);
 }
 
 .btn-outline {
   background: transparent;
-  color: var(--text-primary);
-  border: 1px solid var(--border-primary);
+  color: #1a1a1a;
+  border: 1px solid #ddd;
+}
 
-  &:hover {
-    border-color: var(--accent-primary);
-    background: var(--bg-secondary);
-  }
+.btn-outline:hover {
+  border-color: #1a1a1a;
+  background: #f8f9fa;
 }
 
 /* Container */
