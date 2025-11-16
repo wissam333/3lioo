@@ -13,9 +13,12 @@ export default defineNuxtConfig({
     "@vee-validate/nuxt",
     "@nuxtjs/fontaine",
   ],
-  nitro: {
-    serverAssets: [{ baseName: "posts", dir: "content/posts" }],
-  },
+  serverAssets: [
+    {
+      baseName: "content",
+      dir: "content",
+    },
+  ],
   veeValidate: {
     // disable or enable auto imports
     autoImports: true,
