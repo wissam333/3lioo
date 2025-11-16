@@ -1,0 +1,12 @@
+[build]
+  command = "npm run build"
+  publish = ".output/public"
+
+# ⭐ Force Netlify to include content/posts inside the lambda bundle
+[[functions]]
+  directory = ".netlify/functions"
+
+[functions]
+  included_files = [
+    "content/posts/**"
+  ]
