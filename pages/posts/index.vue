@@ -200,7 +200,9 @@ const postsPerPage = 6;
 let currentPage = 1;
 
 // Fetch posts via your API
-const { data: allPosts } = await useFetch("/api/posts");
+const { data: allPosts } = await useAsyncData("posts", () =>
+  queryContent("/posts").find()
+);
 
 // Reactive data
 const searchQuery = ref("");
@@ -288,7 +290,7 @@ const getThreatLevelText = (level) =>
     high: "HIGH RISK",
     critical: "CRITICAL",
     info: "RESEARCH",
-  })[level] || "RESEARCH";
+  }[level] || "RESEARCH");
 
 // SEO
 useSeoMeta({
@@ -323,8 +325,7 @@ useSeoMeta({
 }
 
 .cyber-grid {
-  background-image:
-    linear-gradient(rgba(0, 100, 255, 0.1) 1px, transparent 1px),
+  background-image: linear-gradient(rgba(0, 100, 255, 0.1) 1px, transparent 1px),
     linear-gradient(90deg, rgba(0, 100, 255, 0.1) 1px, transparent 1px);
   background-size: 50px 50px;
   animation: gridMove 20s linear infinite;
