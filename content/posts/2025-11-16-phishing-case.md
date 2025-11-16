@@ -14,132 +14,115 @@ tags:
 ---
 ## Introduction
 
-In this post I'll go through interesting URL submitted I saw on the any run public submission.
+In this post, I'll analyze an interesting URL submitted to the AnyRun public submission platform.
 
-## Hunting the source
+## Hunting the Source
 
-hxxps://pub-e03b84ede40949d783b7ef41e8b36c50[.]r2[.]dev/web.html#<span style="color: red;">REDACTED</span>@syriatel[.]com.sy
+**URL:** `hxxps://pub-e03b84ede40949d783b7ef41e8b36c50[.]r2[.]dev/web.html#REDACTED@syriatel[.]com.sy`
 
-when visiting the URL it looks like an Outlook login page with the prefilled email address <span style="color: red;">REDACTED</span>@syriatel[.]com[.]sy which is written in the URL after the [#] character (I think this email received the spam email that led to the phishing site).
-The view source is disabled so I inspect the HTTP request using burp after refreshing the page
+When visiting the URL, it displays an Outlook login page with a prefilled email address (`REDACTED@syriatel[.]com[.]sy`) written in the URL after the `#` character. This suggests the recipient likely received a spam email leading to this phishing site.
 
+View source was disabled, so I inspected the HTTP request using Burp Suite after refreshing the page.
 
-![](/assets/images/phishing_case/phish_page.png)
-<p style="text-align: center;">Outlook phishing page</p> 
+![Outlook phishing page](/assets/images/phishing_case/phish_page.png)
+*Outlook phishing page*
 
+![Source of phishing page](/assets/images/phishing_case/requsted_js_files.png)
+*Source of the phishing page*
 
+Two JavaScript files were identified for analysis:
 
-![](/assets/images/phishing_case/requsted_js_files.png)
-<div align=center>The source of the phishing page</div>
+## First JavaScript File
 
-Now we have two js files to analyze 
-### First one:
+The first script creates the HTML template for the phishing page.
 
-The first script is responsible for creating the html template for the phishing page
+![First obfuscated JS file](/assets/images/phishing_case/first_js.png)
+*First obfuscated JavaScript file*
 
-![](/assets/images/phishing_case/first_js.png)
+After deobfuscation, the file uses the `unescape` function to generate the HTML page.
 
-<div align="center">The first obfuscated js file</div>
+![Deobfuscated first JS file](/assets/images/phishing_case/debof_first_js.png)
 
-after deobfuscating the file it uses the [unescape](https://www.w3schools.com/jsref/jsref_unescape.asp) function to generate html page
+![Generated HTML page](/assets/images/phishing_case/first_html.png)
+*Generated HTML page*
 
-![](/assets/images/phishing_case/debof_first_js.png)
+## Second JavaScript File
 
- 
+The second file, after deobfuscation, handles sending the captured credentials to the attacker.
 
-![](/assets/images/phishing_case/first_html.png)
+![Second JS file sending code](/assets/images/phishing_case/second_js.png)
+*Sending part of the code*
 
-<div align="center">The generated html page</div>
+It sends a POST request after decoding a base64-encoded URL using the `atob` function. The decoded URL is: `hxxps://gsenddata[.]com/web/dropbox[.]php`
 
-### Second file
+![Received data](/assets/images/phishing_case/reciv1.png)
 
-After deobfuscating the second file It appears to be the js file which is responsible for sending the entered credentials to the attacker.
+The domain hosts additional files serving similar purposes.
 
-![](/assets/images/phishing_case/second_js.png)
+![Additional files 1](/assets/images/phishing_case/addfile2.png)
+![Additional files 2](/assets/images/phishing_case/addfiles1.png)
 
-<div align="center">The sending part of code </div>
+## Back to the Start Point
 
-It sends a post request after using the [atob](https://developer.mozilla.org/en-US/docs/Web/API/atob) function to decode the base64 encoded URL. 
-The decoded URL is hxxps://gsenddata[.]com/web/dropbox[.]php
+Using Google search and tracing the domain `hxxps://eu.starton-ipfs[.]com`, I found an interesting file:  
+`hxxps://eu.starton-ipfs[.]com/ipfs//bafybeiffgj723rrq4ejwm7iydforlu2gu4xaog6xhhf2knoyk4ktt53y4y`
 
+![Interesting file](/assets/images/phishing_case/int.png)
 
-![](/assets/images/phishing_case/reciv1.png)
+Scrolling to the end of the file reveals that it writes the `em` variable to the document.
 
-The domain is hosting additional files that looks like serving the same purpose.
+![End of file](/assets/images/phishing_case/intdown.png)
 
-![](/assets/images/phishing_case/addfile2.png)
-![](/assets/images/phishing_case/addfiles1.png)
+Saving and debugging this JavaScript file to extract the string stored in the `em` variable revealed new HTML code.
 
-## Back to start point
+![New HTML code](/assets/images/phishing_case/newhtml.png)
 
-Using some google search and parsing any trace for using the same domain that hosts the js files hxxps://eu.starton-ipfs[.]com I found an interesting file hxxps://eu.starton-ipfs[.]com/ipfs//bafybeiffgj723rrq4ejwm7iydforlu2gu4xaog6xhhf2knoyk4ktt53y4y
-![](/assets/images/phishing_case/int.png)
+The generated HTML appears to be an older phishing page using a similar method—storing a base64-encoded URL in a variable named `file` and sending credentials to the decoded URL.
 
-by scrolling  to the end of the file we can assume that it writes the em variable to the document 
+![HTML source 1](/assets/images/phishing_case/inthtml1.png)
+![HTML source 2](/assets/images/phishing_case/inthtml2.png)
 
-![](/assets/images/phishing_case/intdown.png)
+The decoded URL is `hxxps://lslamic-relief[.]org/Irworldwide/oba[.]php`, which is currently offline.
 
-saving this js file and debugging it to extract the string stored in the em variable resulting in a new HTML code  
+## Image of Interest
 
-![](/assets/images/phishing_case/newhtml.png)
-The generated HTML file seems to be an old phishing page, and by viewing its source there is a using of a similar method to the one we saw before, It also stores the base64 encoded URL (in a variable named file) and then sends the entered credentials to the URL after decoding it.
+While examining the generated HTML file, I discovered a suspicious PNG link used as a background image.
 
+![Suspicious PNG link](/assets/images/phishing_case/intimg.png)
 
-![](/assets/images/phishing_case/inthtml1.png)
+The image is hosted on `hxxps://swatantraindialive7[.]com/wp-includes/`, indicating the site was likely compromised.
 
-![](/assets/images/phishing_case/inthtml2.png)
+![Open directory](/assets/images/phishing_case/imgopen.png)
 
+Further investigation revealed this PNG is widely used across similar phishing pages and appears linked to a phish kit. Searching for the PNG hash on urlscan.io returned thousands of phishing sites.
 
-The decoded URL is hxxps://lslamic-relief[.]org/Irworldwide/oba[.]php which is down at the time of writing this post.
+![Image search results](/assets/images/phishing_case/imgsearch1.png)
 
-### Image of interest
+I decoded the base64 image from the generated HTML file, searched for its hash on urlscan.io, and found thousands of similar phishing sites—many hosted on Cloudflare Pages.dev and Workers.dev domains.
 
-While trying to search for any other clues in the generated HTML file I came across this weird PNG link for the background image 
+![Base64 PNG image](/assets/images/phishing_case/imgcontainer.png)
+*Base64 PNG image*
 
+![Cloudflare results](/assets/images/phishing_case/resultcloud.png)
+*Search results for the base64 image*
 
-![](/assets/images/phishing_case/intimg.png)
-
-
-
-
-the image is hosted on hxxps://swatantraindialive7[.]com/wp-includes/  which means it probably compromised by the threat actor
-
-
-![](/assets/images/phishing_case/imgopen.png)
-
-back to the PNG file and looking through the web it looks like this PNG file is used by a lot of similar phishing pages and seems to be linked to a phish kit, searching for the PNG hash using urlscan.io results thousands of phish sites 
-
-![](/assets/images/phishing_case/imgsearch1.png)
-
-so I decoded the base64 image which has been used in the generated HTML file by the first js file and searched for its hash using urlscan.io and got thousands of phishing sites similar to the one we had (a lot of these sites are hosted by Cloudflare Pages.dev and Workers.dev domains ).
-
-![](/assets/images/phishing_case/imgcontainer.png)
-<div align="center">The base64 PNG image </div>
-
-
-
-![](/assets/images/phishing_case/resultcloud.png)
-
-<div align="center">The results of searching for the base64 image </div>
-
-## IOC
+## Indicators of Compromise (IOCs)
 
 | Type | Indicator | Description |
-| :--- | :--: | :--: |
-| URL | hxxps://pub-e03b84ede4094hxxps://pub-e03b84ede40949d783b7ef41e8b36c50[.]r2[.]dev/web.html | Outlook login phishing site |
-| URL | hxxps://eu.starton-ipfs[.]com/ipfs/bafybeicnzy4miwpnysban6yu5taxmsxjslw4nhmsykbfr6k6prqeohdgyi | JS file that loads the html file (first one) |
-| URL | hxxps://eu.starton-ipfs[.]com/ipfs/bafkreifwfl4267c7mwuq4yfvedvjgulgmwmk5tveeik6wqjnb7bwunf2ki | JS file that sends the credentials (second file) |
-| URL | hxxps://gsenddata[.]com | Domain hosting the php files for receiving the data |
-| URL | hxxps://eu.starton-ipfs[.]com/ipfs//bafybeiffgj723rrq4ejwm7iydforlu2gu4xaog6xhhf2knoyk4ktt53y4y | JS file generates an old phish site |
-| URL | hxxps://lslamic-relief[.]org/Irworldwide/oba[.]php | Receiver php file (domain is dead now) |
-| URL | hxxps://swatantraindialive7[.]com/wp-includes/ | Open Dir hosting the background PNG file |
-| SHA-256 | cdff0a47d3bb27e0015ed5332bb2614a5cc8ff8879b9469b531f18fb9dbc9822 | PNG file (background one) |
-| SHA-256 | d9ed6586942003696afe4e52b09f343f8342244b51a9e175b75162d7e615207b | PNG file (base64 one) |
-
+|------|-----------|-------------|
+| URL | `hxxps://pub-e03b84ede40949d783b7ef41e8b36c50[.]r2[.]dev/web.html` | Outlook login phishing site |
+| URL | `hxxps://eu.starton-ipfs[.]com/ipfs/bafybeicnzy4miwpnysban6yu5taxmsxjslw4nhmsykbfr6k6prqeohdgyi` | JS file that loads HTML (first file) |
+| URL | `hxxps://eu.starton-ipfs[.]com/ipfs/bafkreifwfl4267c7mwuq4yfvedvjgulgmwmk5tveeik6wqjnb7bwunf2ki` | JS file that sends credentials (second file) |
+| URL | `hxxps://gsenddata[.]com` | Domain hosting PHP files for data exfiltration |
+| URL | `hxxps://eu.starton-ipfs[.]com/ipfs//bafybeiffgj723rrq4ejwm7iydforlu2gu4xaog6xhhf2knoyk4ktt53y4y` | JS file generating older phishing site |
+| URL | `hxxps://lslamic-relief[.]org/Irworldwide/oba[.]php` | Receiver PHP file (currently offline) |
+| URL | `hxxps://swatantraindialive7[.]com/wp-includes/` | Open directory hosting background PNG |
+| SHA-256 | `cdff0a47d3bb27e0015ed5332bb2614a5cc8ff8879b9469b531f18fb9dbc9822` | PNG file (background image) |
+| SHA-256 | `d9ed6586942003696afe4e52b09f343f8342244b51a9e175b75162d7e615207b` | PNG file (base64 encoded version) |
 
 ## References
 
-- [https://www.trustwave.com/en-us/resources/blogs/spiderlabs-blog/its-raining-phish-and-scams-how-cloudflare-pages-dev-and-workers-dev-domains-get-abused/](https://www.trustwave.com/en-us/resources/blogs/spiderlabs-blog/its-raining-phish-and-scams-how-cloudflare-pages-dev-and-workers-dev-domains-get-abused/)
-- [https://obf-io.deobfuscate.io/](https://obf-io.deobfuscate.io/)
-- [https://app.any.run/submissions/](https://app.any.run/submissions/)
-- [https://urlscan.io/](https://urlscan.io/)
+- [Trustwave: Cloudflare Pages and Workers Abuse](https://www.trustwave.com/en-us/resources/blogs/spiderlabs-blog/its-raining-phish-and-scams-how-cloudflare-pages-dev-and-workers-dev-domains-get-abused/)
+- [OBF-IO Deobfuscator](https://obf-io.deobfuscate.io/)
+- [AnyRun Submissions](https://app.any.run/submissions/)
+- [URLScan.io](https://urlscan.io/)
