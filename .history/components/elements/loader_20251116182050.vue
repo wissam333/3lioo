@@ -195,7 +195,7 @@ onBeforeUnmount(() => clear);
 
 .progress-bar {
   height: 100%;
-  background: linear-gradient(90deg, #474747, #676f6f);
+  background: linear-gradient(90deg, #0080ff, #00ffff);
   transition: width 0.3s ease;
   position: relative;
 }

@@ -1,12 +1,22 @@
 <template>
   <div>
     <div
-      v-if="data.show"
+      v-if="!data.show"
       class="cyber-loader"
-      :class="{ 'loader-visible': data.show }"
+      :class="{ 'loader-visible': !data.show }"
     >
       <!-- Main Loader Content -->
       <div class="loader-content">
+        <!-- Cyber Spinner -->
+        <div class="cyber-spinner">
+          <div class="spinner-ring"></div>
+          <div class="spinner-ring"></div>
+          <div class="spinner-ring"></div>
+          <div class="spinner-core">
+            <div class="spinner-dot"></div>
+          </div>
+        </div>
+
         <div class="terminal-line">
           <div class="progress-container">
             <div
@@ -159,7 +169,7 @@ onBeforeUnmount(() => clear);
   left: 0;
   width: 100%;
   height: 100vh;
-  background: linear-gradient(135deg, #f5f5f5 0%, #cacaca 50%, #939393 100%);
+  background: linear-gradient(135deg, #f5f5f5 0%, #cacaca 50%, #16213e 100%);
   z-index: 99999;
   display: flex;
   align-items: center;
@@ -185,8 +195,8 @@ onBeforeUnmount(() => clear);
 /* Progress Bar */
 .progress-container {
   position: relative;
-  background: #aeaeae;
-  border: 1px solid #858585;
+  background: #1a1a1a;
+  border: 1px solid #333;
   border-radius: 4px;
   height: 20px;
   margin: 10px 0;
@@ -195,7 +205,7 @@ onBeforeUnmount(() => clear);
 
 .progress-bar {
   height: 100%;
-  background: linear-gradient(90deg, #474747, #676f6f);
+  background: linear-gradient(90deg, #0080ff, #00ffff);
   transition: width 0.3s ease;
   position: relative;
 }
@@ -225,5 +235,130 @@ onBeforeUnmount(() => clear);
   font-size: 0.8rem;
   font-weight: 600;
   text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+}
+
+/* Cyber Spinner */
+.cyber-spinner {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  margin: 20px auto;
+}
+
+.spinner-ring {
+  position: absolute;
+  border: 2px solid transparent;
+  border-top: 2px solid #00ffff;
+  border-radius: 50%;
+  animation: spin 2s linear infinite;
+}
+
+.spinner-ring:nth-child(1) {
+  width: 80px;
+  height: 80px;
+  animation-duration: 2s;
+}
+
+.spinner-ring:nth-child(2) {
+  width: 60px;
+  height: 60px;
+  top: 10px;
+  left: 10px;
+  animation-duration: 1.5s;
+  animation-direction: reverse;
+  border-top-color: #0080ff;
+}
+
+.spinner-ring:nth-child(3) {
+  width: 40px;
+  height: 40px;
+  top: 20px;
+  left: 20px;
+  animation-duration: 1s;
+  border-top-color: #ff0080;
+}
+
+.spinner-core {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 20px;
+  height: 20px;
+  background: rgba(0, 255, 255, 0.1);
+  border-radius: 50%;
+  border: 1px solid rgba(0, 255, 255, 0.3);
+}
+
+.spinner-dot {
+  width: 4px;
+  height: 4px;
+  background: #00ffff;
+  border-radius: 50%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+/* Status Messages */
+.status-messages {
+  margin: 20px 0;
+}
+
+.status-item {
+  color: #888;
+  margin: 8px 0;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+  opacity: 0.5;
+}
+
+.status-item.active {
+  color: #00ffff;
+  opacity: 1;
+  text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+}
+
+.status-icon {
+  margin-right: 8px;
+  color: #00ff00;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .cyber-spinner {
+    width: 60px;
+    height: 60px;
+  }
+
+  .spinner-ring:nth-child(1) {
+    width: 60px;
+    height: 60px;
+  }
+
+  .spinner-ring:nth-child(2) {
+    width: 45px;
+    height: 45px;
+    top: 7.5px;
+    left: 7.5px;
+  }
+
+  .spinner-ring:nth-child(3) {
+    width: 30px;
+    height: 30px;
+    top: 15px;
+    left: 15px;
+  }
 }
 </style>

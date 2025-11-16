@@ -61,7 +61,7 @@
       </div>
 
       <!-- Most Viewed -->
-      <!-- <div class="most-viewed-sidebar">
+      <div class="most-viewed-sidebar">
         <h3 class="sidebar-title">
           <i class="fas fa-chart-line"></i>
           {{ $i18n.locale === "ar" ? "الأكثر مشاهدة" : "Most Viewed" }}
@@ -106,7 +106,7 @@
             </nuxt-link>
           </div>
         </div>
-      </div> -->
+      </div>
     </aside>
 
     <!-- ===== Main Content ===== -->
@@ -119,7 +119,7 @@
           </li>
           <li aria-hidden="true">/</li>
           <li>
-            <nuxt-link :to="`/posts`">
+            <nuxt-link :to="`/category/${validatedPost.category}`">
               {{ getCategoryLabel(validatedPost.category) }}
             </nuxt-link>
           </li>
@@ -470,7 +470,7 @@
       </section>
 
       <!-- Newsletter Signup -->
-      <!-- <section class="newsletter-section">
+      <section class="newsletter-section">
         <div class="newsletter-card">
           <div class="newsletter-content">
             <h3>
@@ -511,7 +511,7 @@
             </form>
           </div>
         </div>
-      </section> -->
+      </section>
     </main>
   </div>
 </template>

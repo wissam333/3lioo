@@ -1,12 +1,22 @@
 <template>
   <div class="blog-page">
-    <!-- Minimal Hero Section -->
+    <!-- Hero Section -->
     <section class="blog-hero">
+      <div class="cyber-grid"></div>
+      <div class="scan-line"></div>
       <div class="container">
         <div class="blog-hero-content">
-          <h1 class="blog-title">Security Research</h1>
+          <div class="badge">
+            <span class="pulse-dot"></span>
+            SECURITY RESEARCH
+          </div>
+          <h1 class="blog-title">
+            <span class="cyber-text">Threat Intelligence</span>
+            <br />
+            <span class="glitch-text" data-text="Archive">Archive</span>
+          </h1>
           <p class="blog-subtitle">
-            Analysis of vulnerabilities, threat intelligence, and defense
+            Comprehensive analysis of vulnerabilities, exploits, and defense
             strategies
           </p>
         </div>
@@ -22,7 +32,7 @@
             <input
               v-model="searchQuery"
               type="text"
-              placeholder="Search research..."
+              placeholder="Search security research..."
               class="search-input"
               aria-label="Search posts"
             />
@@ -121,7 +131,7 @@
       <div class="container">
         <div v-if="filteredPosts.length === 0" class="no-results">
           <div class="no-results-icon">🔍</div>
-          <h3>No research found</h3>
+          <h3>No security research found</h3>
           <p>Try adjusting your search criteria or filters</p>
           <button
             @click="clearAllFilters"
@@ -137,39 +147,36 @@
             v-for="post in filteredPosts"
             :key="post._path"
             class="post-card"
+            :class="`threat-level-${post.threatLevel || 'info'}`"
           >
-            <div class="post-meta">
-              <span class="post-date">{{ formatDate(post.date) }}</span>
-              <span class="post-category">{{
-                post.category || "Security"
-              }}</span>
-              <span class="threat-level" :class="post.threatLevel || 'info'">
+            <div class="post-header">
+              <div class="threat-badge" :class="post.threatLevel || 'info'">
                 {{ getThreatLevelText(post.threatLevel) }}
+              </div>
+              <div class="post-date">{{ formatDate(post.date) }}</div>
+            </div>
+
+            <h2 class="post-title">{{ post.title }}</h2>
+            <p class="post-description">{{ post.description }}</p>
+
+            <div class="post-meta">
+              <span class="category">{{ post.category || "Security" }}</span>
+              <span class="read-time">{{ post.readTime || "5 min read" }}</span>
+            </div>
+
+            <div class="post-tags">
+              <span v-for="tag in post.tags" :key="tag" class="post-tag">
+                {{ tag }}
               </span>
             </div>
 
-            <h2 class="post-title">
-              <NuxtLink :to="post._path">{{ post.title }}</NuxtLink>
-            </h2>
-            <p class="post-description">{{ post.description }}</p>
-
-            <div class="post-footer">
-              <div class="post-tags">
-                <span
-                  v-for="tag in post.tags?.slice(0, 3)"
-                  :key="tag"
-                  class="post-tag"
-                >
-                  {{ tag }}
-                </span>
-              </div>
-              <div class="post-actions">
-                <span class="read-time">{{
-                  post.readTime || "5 min read"
-                }}</span>
-                <NuxtLink :to="post._path" class="read-more"> Read → </NuxtLink>
-              </div>
-            </div>
+            <NuxtLink
+              :to="post._path"
+              class="post-link"
+              aria-label="Read full post"
+            >
+              Analyze Threat ⟫
+            </NuxtLink>
           </article>
         </div>
 
@@ -177,10 +184,10 @@
         <div v-if="showLoadMore" class="load-more">
           <button
             @click="loadMore"
-            class="btn btn-outline"
+            class="btn btn-secondary"
             aria-label="Load more posts"
           >
-            Load More
+            Load More Research
           </button>
         </div>
       </div>
@@ -278,66 +285,89 @@ const formatDate = (d) =>
   });
 const getThreatLevelText = (level) =>
   ({
-    low: "Low Risk",
-    medium: "Medium Risk",
-    high: "High Risk",
-    critical: "Critical",
-    info: "Research",
-  }[level] || "Research");
+    low: "LOW RISK",
+    medium: "MEDIUM RISK",
+    high: "HIGH RISK",
+    critical: "CRITICAL",
+    info: "RESEARCH",
+  }[level] || "RESEARCH");
 
 // SEO
 useSeoMeta({
-  title: "Security Research - Threat Intelligence & Analysis",
+  title: "Security Research Archive - Threat Intelligence & Analysis",
   description:
-    "Collection of security research, vulnerability analysis, and threat intelligence from cybersecurity experts.",
+    "Comprehensive collection of security research, vulnerability analysis, threat intelligence, and defense strategies from cybersecurity experts.",
 });
 </script>
 
 <style scoped>
 .blog-page {
+  background: #0a0a0a;
+  color: #e0e0e0;
   min-height: 100vh;
-  background: #ffffff;
-  color: #1a1a1a;
 }
 
 /* Blog Hero */
 .blog-hero {
-  padding: 80px 0 60px;
-  background: #f8f9fa;
-  border-bottom: 1px solid #e9ecef;
+  position: relative;
+  padding: 120px 0 80px;
+  background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+  overflow: hidden;
+}
+
+.cyber-grid,
+.scan-line {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.cyber-grid {
+  background-image: linear-gradient(rgba(0, 100, 255, 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 100, 255, 0.1) 1px, transparent 1px);
+  background-size: 50px 50px;
+  animation: gridMove 20s linear infinite;
+}
+
+.scan-line {
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #00ffff, transparent);
+  animation: scan 3s linear infinite;
 }
 
 .blog-hero-content {
-  max-width: 600px;
-  margin: 0 auto;
   text-align: center;
+  position: relative;
+  z-index: 2;
 }
 
 .blog-title {
-  font-size: 2.5rem;
+  font-size: 3.5rem;
   font-weight: 700;
-  margin-bottom: 1rem;
-  color: #1a1a1a;
   line-height: 1.1;
+  margin-bottom: 20px;
 }
 
 .blog-subtitle {
-  font-size: 1.125rem;
-  line-height: 1.6;
-  color: #666;
+  font-size: 1.2rem;
+  color: #b0b0b0;
+  max-width: 600px;
+  margin: 0 auto;
 }
 
 /* Filters */
 .blog-filters {
   padding: 40px 0;
-  background: #ffffff;
-  border-bottom: 1px solid #e9ecef;
+  background: #111;
+  border-bottom: 1px solid #333;
 }
 
 .filters-grid {
   display: grid;
   grid-template-columns: 2fr 1fr 1fr 1fr;
-  gap: 1rem;
+  gap: 20px;
   align-items: end;
 }
 
@@ -347,7 +377,7 @@ useSeoMeta({
 
 .search-icon {
   position: absolute;
-  left: 1rem;
+  left: 16px;
   top: 50%;
   transform: translateY(-50%);
   color: #666;
@@ -355,78 +385,77 @@ useSeoMeta({
 
 .search-input {
   width: 100%;
-  padding: 0.75rem 1rem 0.75rem 3rem;
-  background: #ffffff;
-  border: 1px solid #ddd;
+  padding: 12px 16px 12px 48px;
+  background: #1a1a1a;
+  border: 1px solid #333;
   border-radius: 4px;
-  color: #1a1a1a;
+  color: #fff;
   font-size: 1rem;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
 }
 
 .search-input:focus {
   outline: none;
-  border-color: #1a1a1a;
-  box-shadow: 0 0 0 2px rgba(26, 26, 26, 0.1);
+  border-color: #00ffff;
+  box-shadow: 0 0 0 2px rgba(0, 255, 255, 0.1);
 }
 
 .search-input::placeholder {
-  color: #999;
+  color: #666;
 }
 
 .filter-select {
   width: 100%;
-  padding: 0.75rem 1rem;
-  background: #ffffff;
-  border: 1px solid #ddd;
+  padding: 12px 16px;
+  background: #1a1a1a;
+  border: 1px solid #333;
   border-radius: 4px;
-  color: #1a1a1a;
+  color: #fff;
   font-size: 1rem;
   cursor: pointer;
-  transition: border-color 0.2s ease;
 }
 
 .filter-select:focus {
   outline: none;
-  border-color: #1a1a1a;
+  border-color: #00ffff;
 }
 
 .active-filters {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 0.75rem;
-  margin-top: 1.5rem;
-  padding: 1rem;
-  background: #f8f9fa;
+  gap: 12px;
+  margin-top: 20px;
+  padding: 16px;
+  background: rgba(0, 255, 255, 0.05);
   border-radius: 4px;
-  border: 1px solid #e9ecef;
+  border: 1px solid rgba(0, 255, 255, 0.2);
 }
 
 .active-filters-label {
-  color: #666;
-  font-weight: 500;
-  font-size: 0.875rem;
+  color: #00ffff;
+  font-weight: 600;
+  font-size: 0.9rem;
 }
 
 .filter-tag {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  background: #ffffff;
-  color: #1a1a1a;
-  padding: 0.375rem 0.75rem;
+  gap: 8px;
+  background: rgba(0, 255, 255, 0.1);
+  color: #00ffff;
+  padding: 6px 12px;
   border-radius: 20px;
   font-size: 0.8rem;
-  border: 1px solid #ddd;
+  border: 1px solid rgba(0, 255, 255, 0.3);
 }
 
 .filter-remove {
   background: none;
   border: none;
-  color: #666;
+  color: #00ffff;
   cursor: pointer;
-  font-size: 1.1rem;
+  font-size: 1.2rem;
   line-height: 1;
   padding: 0;
   width: 16px;
@@ -434,11 +463,9 @@ useSeoMeta({
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 50%;
 }
 
 .filter-remove:hover {
-  background: #f8f9fa;
   color: #ff4444;
 }
 
@@ -446,234 +473,225 @@ useSeoMeta({
   background: none;
   border: 1px solid #ff4444;
   color: #ff4444;
-  padding: 0.375rem 0.75rem;
+  padding: 6px 12px;
   border-radius: 4px;
   cursor: pointer;
   font-size: 0.8rem;
   margin-left: auto;
-  transition: all 0.2s ease;
 }
 
 .clear-all:hover {
-  background: #ff4444;
-  color: #ffffff;
+  background: rgba(255, 68, 68, 0.1);
 }
 
 /* Blog Posts */
 .blog-posts {
-  padding: 60px 0;
-  background: #ffffff;
+  padding: 80px 0;
 }
 
 .posts-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-  gap: 2rem;
-  margin-bottom: 3rem;
+  gap: 30px;
+  margin-bottom: 60px;
 }
 
 .post-card {
-  background: #ffffff;
-  padding: 2rem;
-  border-radius: 4px;
-  border: 1px solid #e9ecef;
-  transition: all 0.2s ease;
+  background: #1a1a1a;
+  padding: 30px;
+  border-radius: 8px;
+  border: 1px solid #333;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.post-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #00ffff, transparent);
+  transition: left 0.5s ease;
+}
+
+.post-card:hover::before {
+  left: 100%;
 }
 
 .post-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-  border-color: #1a1a1a;
+  transform: translateY(-5px);
+  border-color: #00ffff;
+  box-shadow: 0 10px 30px rgba(0, 255, 255, 0.1);
+}
+
+.post-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.threat-badge {
+  padding: 4px 12px;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+
+.threat-badge.info {
+  background: rgba(0, 100, 255, 0.2);
+  color: #0080ff;
+  border: 1px solid #0080ff;
+}
+
+.threat-badge.low {
+  background: rgba(0, 255, 0, 0.2);
+  color: #00ff00;
+  border: 1px solid #00ff00;
+}
+
+.threat-badge.medium {
+  background: rgba(255, 255, 0, 0.2);
+  color: #ffff00;
+  border: 1px solid #ffff00;
+}
+
+.threat-badge.high {
+  background: rgba(255, 165, 0, 0.2);
+  color: #ffa500;
+  border: 1px solid #ffa500;
+}
+
+.threat-badge.critical {
+  background: rgba(255, 0, 0, 0.2);
+  color: #ff0000;
+  border: 1px solid #ff0000;
+}
+
+.post-date {
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.post-title {
+  font-size: 1.5rem;
+  margin-bottom: 16px;
+  color: #fff;
+  line-height: 1.3;
+}
+
+.post-description {
+  color: #b0b0b0;
+  line-height: 1.6;
+  margin-bottom: 20px;
 }
 
 .post-meta {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1rem;
-  font-size: 0.875rem;
+  margin-bottom: 16px;
+  font-size: 0.9rem;
   color: #666;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
-.post-category {
-  text-transform: uppercase;
-  font-weight: 500;
-  letter-spacing: 0.5px;
-}
-
-.threat-level {
-  padding: 0.25rem 0.5rem;
-  border-radius: 4px;
-  font-size: 0.75rem;
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.threat-level.info {
-  background: #e3f2fd;
-  color: #1976d2;
-}
-
-.threat-level.low {
-  background: #e8f5e8;
-  color: #2e7d32;
-}
-
-.threat-level.medium {
-  background: #fff3e0;
-  color: #f57c00;
-}
-
-.threat-level.high {
-  background: #ffebee;
-  color: #c62828;
-}
-
-.threat-level.critical {
-  background: #fce4ec;
-  color: #ad1457;
-  font-weight: 600;
-}
-
-.post-title {
-  font-size: 1.25rem;
-  margin-bottom: 1rem;
-  line-height: 1.4;
-}
-
-.post-title a {
-  color: #1a1a1a;
-  text-decoration: none;
-}
-
-.post-title a:hover {
-  color: #333;
-}
-
-.post-description {
-  color: #666;
-  line-height: 1.6;
-  margin-bottom: 1.5rem;
-}
-
-.post-footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 1rem;
 }
 
 .post-tags {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
+  gap: 8px;
+  margin-bottom: 20px;
 }
 
 .post-tag {
-  background: #f8f9fa;
-  color: #666;
-  padding: 0.25rem 0.5rem;
-  border-radius: 4px;
-  font-size: 0.75rem;
-  border: 1px solid #e9ecef;
+  background: rgba(0, 255, 255, 0.1);
+  color: #00ffff;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  border: 1px solid rgba(0, 255, 255, 0.3);
 }
 
-.post-actions {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  font-size: 0.875rem;
-  color: #666;
-}
-
-.read-more {
-  color: #1a1a1a;
+.post-link {
+  color: #00ffff;
   text-decoration: none;
-  font-weight: 500;
-  transition: color 0.2s ease;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: color 0.3s ease;
 }
 
-.read-more:hover {
-  color: #333;
+.post-link:hover {
+  color: #0080ff;
 }
 
 .no-results {
   text-align: center;
-  padding: 4rem 1rem;
+  padding: 80px 20px;
 }
 
 .no-results-icon {
-  font-size: 3rem;
-  margin-bottom: 1.5rem;
+  font-size: 4rem;
+  margin-bottom: 20px;
   opacity: 0.5;
 }
 
 .no-results h3 {
   font-size: 1.5rem;
-  margin-bottom: 0.75rem;
-  color: #1a1a1a;
+  margin-bottom: 12px;
+  color: #fff;
 }
 
 .no-results p {
-  color: #666;
-  margin-bottom: 2rem;
+  color: #b0b0b0;
+  margin-bottom: 30px;
 }
 
 .load-more {
   text-align: center;
 }
 
-/* Buttons */
 .btn {
   display: inline-flex;
   align-items: center;
-  padding: 0.75rem 1.5rem;
+  gap: 8px;
+  padding: 12px 24px;
   border-radius: 4px;
   text-decoration: none;
-  font-weight: 500;
-  transition: all 0.2s ease;
-  border: 1px solid transparent;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  border: none;
   cursor: pointer;
-  font-size: 1rem;
 }
 
 .btn-primary {
-  background: #1a1a1a;
-  color: #ffffff;
+  background: linear-gradient(135deg, #0080ff 0%, #00ffff 100%);
+  color: #000;
 }
 
 .btn-primary:hover {
-  background: #333;
-  transform: translateY(-1px);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 128, 255, 0.3);
 }
 
-.btn-outline {
+.btn-secondary {
   background: transparent;
-  color: #1a1a1a;
-  border: 1px solid #ddd;
+  color: #00ffff;
+  border: 1px solid #00ffff;
 }
 
-.btn-outline:hover {
-  border-color: #1a1a1a;
-  background: #f8f9fa;
-}
-
-/* Container */
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 1.5rem;
+.btn-secondary:hover {
+  background: rgba(0, 255, 255, 0.1);
 }
 
 /* Responsive */
 @media (max-width: 1024px) {
   .filters-grid {
     grid-template-columns: 1fr 1fr;
-    gap: 1rem;
+    gap: 15px;
   }
 
   .posts-grid {
@@ -683,7 +701,7 @@ useSeoMeta({
 
 @media (max-width: 768px) {
   .blog-title {
-    font-size: 2rem;
+    font-size: 2.5rem;
   }
 
   .filters-grid {
@@ -697,32 +715,54 @@ useSeoMeta({
 
   .clear-all {
     margin-left: 0;
-    margin-top: 0.5rem;
-  }
-
-  .post-footer {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .post-actions {
-    align-self: flex-end;
+    margin-top: 10px;
   }
 }
 
-@media (max-width: 480px) {
-  .container {
-    padding: 0 1rem;
-  }
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
 
-  .post-card {
-    padding: 1.5rem;
+/* Animations (reuse from homepage) */
+@keyframes gridMove {
+  0% {
+    transform: translateY(0);
   }
+  100% {
+    transform: translateY(50px);
+  }
+}
 
-  .post-meta {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.5rem;
+@keyframes scan {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(100vh);
+  }
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+.posts-grid article {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeIn 0.5s forwards;
+  animation-delay: calc(var(--post-index) * 0.05s);
+}
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 </style>
