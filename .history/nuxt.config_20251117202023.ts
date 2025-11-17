@@ -17,7 +17,6 @@ export default defineNuxtConfig({
   ],
   sitemap: {
     gzip: true,
-    hostname: "https://3lioo.netlify.app",
     exclude: ["/admin"], // Decap CMS
   },
 

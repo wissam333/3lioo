@@ -15,11 +15,6 @@ export default defineNuxtConfig({
     "@nuxt/content",
     "@nuxtjs/sitemap",
   ],
-  sitemap: {
-    gzip: true,
-    hostname: "https://3lioo.netlify.app",
-    exclude: ["/admin"], // Decap CMS
-  },
 
   veeValidate: {
     // disable or enable auto imports
